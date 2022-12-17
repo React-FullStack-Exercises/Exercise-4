@@ -95,3 +95,54 @@ describe('favorite blog', () => {
     expect(result).toEqual(expected)
   })
 })
+
+describe('blogs summery', () => {
+  const blogs = [
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 7
+    },
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      likes: 11
+    },
+    {
+      title: 'Go To Statement Considered Harmful',
+      author: 'Rene',
+      likes: 2
+    },
+    {
+      title: 'Canonical string reduction',
+      author: 'Rene',
+      likes: 8
+    },
+    {
+      title: 'Canonical string reduction',
+      author: 'Rene',
+      likes: 12
+    }
+  ]
+  test('most blogs by author ', () => {
+    const result = listHelper.mostBlogs(blogs)
+
+    const expected = {
+      author: 'Rene',
+      blogs: 3
+    }
+
+    expect(result).toEqual(expected)
+  })
+
+  test('most likes by author', () => {
+    const result = listHelper.mostLikes(blogs)
+
+    const expected = {
+      author: 'Rene',
+      likes: 22
+    }
+
+    expect(result).toEqual(expected)
+  })
+})
