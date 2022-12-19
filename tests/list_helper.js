@@ -5,8 +5,8 @@ var _ = require('lodash')
 
 const initialBlogs = [
   {
-    title: 'Go To Statement Considered Harmful',
-    author: 'Edsger W. Dijkstra',
+    title: 'something to write for express',
+    author: 'raja rani',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 7
   },
@@ -17,7 +17,7 @@ const initialBlogs = [
     likes: 1
   },
   {
-    title: 'Go To Statement Considered Harmful',
+    title: 'Node testing with supertest',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 2
