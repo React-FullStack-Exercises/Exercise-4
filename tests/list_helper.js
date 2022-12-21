@@ -1,26 +1,31 @@
 /* eslint-disable no-unused-vars */
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 var _ = require('lodash')
 
+const rootUserId = '63a2af9bc8335e4bdf65641e'
 const initialBlogs = [
   {
     title: 'something to write for express',
     author: 'raja rani',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 7
+    likes: 7,
+    user: rootUserId
   },
   {
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 1
+    likes: 1,
+    user: rootUserId
   },
   {
     title: 'Node testing with supertest',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-    likes: 2
+    likes: 2,
+    user: rootUserId
   }
 ]
 
@@ -68,7 +73,10 @@ const blogsInDB = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
-
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
+}
 
 
 module.exports = {
@@ -80,5 +88,7 @@ module.exports = {
 
   initialBlogs,
   nonExistingId,
-  blogsInDB
+  blogsInDB,
+
+  usersInDb
 }

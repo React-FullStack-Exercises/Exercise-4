@@ -39,6 +39,21 @@ describe('When there is initially some blogs saved', () => {
 })
 
 describe('addition of a new blog', () => {
+  var authToken = ''
+  beforeEach(async () => {
+    const newUser = {
+      username: 'root',
+      password: 'password'
+    }
+
+    const user = await api
+      .post('/api/login')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    authToken = `bearer ${user.body.token}`
+  })
   test('a valid blog can be added', async () => {
     const newBlog = {
       title: 'Node.js testing with Jest',
@@ -49,6 +64,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -60,7 +76,30 @@ describe('addition of a new blog', () => {
     expect(titles).toContain(
       newBlog.title
     )
+  })
 
+  test('a valid blog with missing/wrong token will not be added', async () => {
+    const newBlog = {
+      title: 'Node.js testing with Jest',
+      author: 'keshab manni',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 24
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', 'bearer wrongtoken')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDB()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+    const titles = blogsAtEnd.map(r => r.title)
+    expect(titles).not.toContain(
+      newBlog.title
+    )
   })
 
   test('if likes property is missing from request, it will default to value 0', async () => {
@@ -72,6 +111,7 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(newBlogWithoutLikes)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -104,11 +144,13 @@ describe('addition of a new blog', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(blogWithoutTitle)
       .expect(400)
 
     await api
       .post('/api/blogs')
+      .set('Authorization', authToken)
       .send(blogWithoutUrl)
       .expect(400)
 
@@ -119,12 +161,28 @@ describe('addition of a new blog', () => {
 })
 
 describe('deletion of a blog', () => {
+  var authToken = ''
+  beforeEach(async () => {
+    const newUser = {
+      username: 'root',
+      password: 'password'
+    }
+
+    const user = await api
+      .post('/api/login')
+      .send(newUser)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    authToken = `bearer ${user.body.token}`
+  })
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDB()
     const blogToDelete = blogsAtStart[0]
 
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', authToken)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDB()
